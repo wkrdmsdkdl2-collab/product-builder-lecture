@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
   <title>복불복 게임 🎰</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,7 +23,7 @@
     <h2>👥 참가자</h2>
     <div class="input-row">
       <input id="playerInput" type="text" placeholder="이름 입력..." maxlength="8" />
-      <button class="btn btn-add" onclick="addPlayer()">추가</button>
+      <button id="addPlayerBtn" class="btn btn-add">추가</button>
     </div>
     <ul class="player-list" id="playerList">
       <li class="empty-msg" id="emptyPlayers">참가자를 추가하세요</li>
@@ -36,7 +37,7 @@
       <canvas id="wheel" width="340" height="340"></canvas>
       <div class="wheel-center"></div>
     </div>
-    <button class="spin-btn" id="spinBtn" onclick="spin()">SPIN!</button>
+    <button class="spin-btn" id="spinBtn">SPIN!</button>
   </div>
 
   <!-- 벌칙 패널 -->
@@ -44,7 +45,7 @@
     <h2>⚡ 벌칙/미션</h2>
     <div class="input-row">
       <input id="penaltyInput" type="text" placeholder="벌칙 입력..." maxlength="20" />
-      <button class="btn btn-add" onclick="addPenalty()">추가</button>
+      <button id="addPenaltyBtn" class="btn btn-add">추가</button>
     </div>
     <ul class="penalty-list" id="penaltyList">
       <li class="empty-msg" id="emptyPenalties">벌칙을 추가하세요</li>
@@ -60,7 +61,7 @@
     <div class="modal-title" id="resultTitle">걸렸다!</div>
     <div class="modal-winner" id="resultWinner"></div>
     <div class="modal-penalty" id="resultPenalty"></div>
-    <button class="modal-close" onclick="closeModal()">확인!</button>
+    <button id="closeModalBtn" class="modal-close">확인!</button>
   </div>
 </div>
 

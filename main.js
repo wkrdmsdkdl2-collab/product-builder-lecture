@@ -44,14 +44,11 @@ function addPlayer() {
   drawWheel();
 }
 
-window.addPlayer = addPlayer; // Global expose for inline onclick
-
 function removePlayer(i) {
   players.splice(i, 1);
   renderPlayers();
   drawWheel();
 }
-window.removePlayer = removePlayer;
 
 function renderPlayers() {
   const list = document.getElementById('playerList');
@@ -65,7 +62,7 @@ function renderPlayers() {
     <li class="player-item">
       <span class="player-dot" style="background:${COLORS[i % COLORS.length]}"></span>
       <span class="player-name">${escHtml(p)}</span>
-      <button class="btn-remove" onclick="removePlayer(${i})">✕</button>
+      <button class="btn-remove" data-index="${i}">✕</button>
     </li>
   `).join('');
 }
@@ -79,13 +76,11 @@ function addPenalty() {
   input.value = '';
   renderPenalties();
 }
-window.addPenalty = addPenalty;
 
 function removePenalty(i) {
   penalties.splice(i, 1);
   renderPenalties();
 }
-window.removePenalty = removePenalty;
 
 function renderPenalties() {
   const list = document.getElementById('penaltyList');
@@ -98,7 +93,7 @@ function renderPenalties() {
   list.innerHTML = penalties.map((p, i) => `
     <li class="penalty-item">
       <span class="penalty-text">⚡ ${escHtml(p)}</span>
-      <button class="btn-remove" onclick="removePenalty(${i})">✕</button>
+      <button class="btn-remove" data-index="${i}">✕</button>
     </li>
   `).join('');
 }
@@ -206,7 +201,6 @@ function spin() {
 
   requestAnimationFrame(animate);
 }
-window.spin = spin;
 
 // ─── 결과 표시 ───────────────────────────────────────────────
 function showResult(winnerIdx) {
@@ -230,7 +224,6 @@ function closeModal() {
   document.getElementById('resultModal').classList.remove('show');
   document.getElementById('confettiContainer').innerHTML = '';
 }
-window.closeModal = closeModal;
 
 // ─── 컨페티 ──────────────────────────────────────────────────
 function launchConfetti(colors) {
@@ -263,12 +256,41 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPenalties();
   drawWheel();
 
-  // 엔터키 지원
+  // 이벤트 리스너 등록 (보안 강화: 인라인 핸들러 대체)
   const pInput = document.getElementById('playerInput');
   const penInput = document.getElementById('penaltyInput');
   const themeBtn = document.getElementById('themeBtn');
+  const addPlayerBtn = document.getElementById('addPlayerBtn');
+  const addPenaltyBtn = document.getElementById('addPenaltyBtn');
+  const spinBtn = document.getElementById('spinBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const playerList = document.getElementById('playerList');
+  const penaltyList = document.getElementById('penaltyList');
 
   if (pInput) pInput.addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(); });
   if (penInput) penInput.addEventListener('keydown', e => { if (e.key === 'Enter') addPenalty(); });
   if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+  if (addPlayerBtn) addPlayerBtn.addEventListener('click', addPlayer);
+  if (addPenaltyBtn) addPenaltyBtn.addEventListener('click', addPenalty);
+  if (spinBtn) spinBtn.addEventListener('click', spin);
+  if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+
+  // 이벤트 위임 (삭제 버튼)
+  if (playerList) {
+    playerList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-remove')) {
+        const index = parseInt(e.target.getAttribute('data-index'));
+        removePlayer(index);
+      }
+    });
+  }
+
+  if (penaltyList) {
+    penaltyList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-remove')) {
+        const index = parseInt(e.target.getAttribute('data-index'));
+        removePenalty(index);
+      }
+    });
+  }
 });
